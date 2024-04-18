@@ -8,13 +8,13 @@ export function normalizeLaTeXChars(string: string): string {
         .replace(/\\`([A-Za-z])/g, (_, char) => char + '̀')  // Grave accent
         .replace(/\\\^([A-Za-z])/g, (_, char) => char + '̂')  // Circumflex
         .replace(/\\~([A-Za-z])/g, (_, char) => char + '̃')  // Tilde
-        .replace(/\\c\{([A-Za-z])/g, (_, char) => char + '̧')  // Cedilla
-        .replace(/\\v\{([A-Za-z])/g, (_, char) => char + '̌')  // Caron
-        .replace(/\\u\{([A-Za-z])/g, (_, char) => char + '̆')  // Breve
-        .replace(/\\=\{([A-Za-z])/g, (_, char) => char + '̄')  // Macron
+        .replace(/\\c\{([A-Za-z])\}/g, (_, char) => char + '̧')  // Cedilla
+        .replace(/\\v\{([A-Za-z])\}/g, (_, char) => char + '̌')  // Caron
+        .replace(/\\u\{([A-Za-z])\}/g, (_, char) => char + '̆')  // Breve
+        .replace(/\\=\{([A-Za-z])\}/g, (_, char) => char + '̄')  // Macron
         .replace(/\\\.([A-Za-z])/g, (_, char) => char + '̇')  // Dot above
         .replace(/\\\"([A-Za-z])/g, (_, char) => char + '̈')  // Diaeresis
-        .replace(/\\H\{([A-Za-z])/g, (_, char) => char + '̋')  // Double acute accent
+        .replace(/\\H\{([A-Za-z])\}/g, (_, char) => char + '̋')  // Double acute accent
         .replace(/\\c{C}/g, 'Ç')
         .replace(/\\c{S}/g, 'Ş')
         .replace(/\\c{c}/g, 'ç')
