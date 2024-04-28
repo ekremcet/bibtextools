@@ -17,16 +17,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         }
 
         try {
-            console.log("Starting BibTeX to CFF conversion")
             const bibTex = req.body.bibTex;
-            console.log(bibTex)
             const bibJSON = ParseBibtex(bibTex)
-            console.log("BibTeX parsed:\n", bibJSON)
             // @ts-ignore
             const authors = extractAuthors(bibJSON.author)
-            console.log("Authors extracted:\n", authors)
             const cffEntry = bibToCff(bibJSON, authors);
-            console.log("CFF entry generated:\n", cffEntry)
             res.setHeader('Content-Type', 'application/x-yaml');
             res.setHeader('Content-Disposition', 'attachment; filename="CITATION.cff"');
             res.send(cffEntry);

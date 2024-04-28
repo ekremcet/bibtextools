@@ -52,7 +52,6 @@ export default function BibFileForm() {
             alert('Please provide a BibTex file or paste BibTex')
         }
 
-        console.log("Form Data: ", formData)
         const response = await fetch(apiPath, {
             method: 'POST',
             body: formData,
