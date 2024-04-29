@@ -15,9 +15,10 @@ import {extractAuthors, ParseBibtex} from "@/lib/parseUtils";
 import {bibToMLA} from "@/lib/utils";
 import {useToast} from "@/components/ui/use-toast";
 import {Toaster} from "@/components/ui/toaster";
+import {LogoHeader} from "@/components/LogoHeader";
 
 export default function BibtexToMla() {
-    const { toast } = useToast()
+    const {toast} = useToast()
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [bibFile, setBibFile] = useState<File | null>(null)
     const [bibTex, setBibTex] = useState<string>("")
@@ -79,58 +80,62 @@ export default function BibtexToMla() {
     };
 
     return (
-        <div className="main-content grid grid-rows-3 justify-center items-center min-h-screen min-w-screen">
-            <Card className="w-[700px] row-span-2">
-                <CardHeader className="text-center">
-                    <CardTitle className="text-2xl">BibTeX to MLA Converter</CardTitle>
-                    <CardDescription>
-                        Convert BibTex format to MLA format for text-based citations
-                    </CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <form onSubmit={handleSubmit} className="flex flex-col space-y-6">
-                        <div className="grid gap-2">
-                            <Label htmlFor="bibFile">Bib File</Label>
-                            <Input id="bibFile" type="file" name="bibFile" onChange={handleFileChange} key={inputKey}/>
-                        </div>
-                        <div className="relative">
-                            <div className="absolute inset-0 flex items-center">
-                                <span className="w-full border-t"/>
+        <div>
+            <LogoHeader/>
+            <div className="main-content grid grid-rows-4 justify-center items-center min-h-screen min-w-screen">
+                <Card className="w-[700px] row-span-2">
+                    <CardHeader className="text-center">
+                        <CardTitle className="text-2xl">BibTeX to MLA Converter</CardTitle>
+                        <CardDescription>
+                            Convert BibTex format to MLA format for text-based citations
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <form onSubmit={handleSubmit} className="flex flex-col space-y-6">
+                            <div className="grid gap-2">
+                                <Label htmlFor="bibFile">Bib File</Label>
+                                <Input id="bibFile" type="file" name="bibFile" onChange={handleFileChange}
+                                       key={inputKey}/>
                             </div>
-                            <div className="relative flex justify-center text-xs uppercase">
+                            <div className="relative">
+                                <div className="absolute inset-0 flex items-center">
+                                    <span className="w-full border-t"/>
+                                </div>
+                                <div className="relative flex justify-center text-xs uppercase">
                                 <span className="bg-background px-2 text-muted-foreground">
                                     Or paste BibTeX below
                                 </span>
+                                </div>
                             </div>
+                            <div className="grid gap-2">
+                                <Label htmlFor="bibTex">BibTeX</Label>
+                                <Textarea id="bibTex" name="bibTex" onChange={handleTextChange} value={bibTex}/>
+                            </div>
+                            <Button type="submit" className="w-full" disabled={!isButtonEnabled || isLoading}>
+                                {isLoading && <LoaderCircle className="mr-2 h-4 w-4 animate-spin"/>}
+                                Convert
+                            </Button>
+                        </form>
+                    </CardContent>
+                </Card>
+                <Card className="row-span-1">
+                    <CardHeader className="text-center">
+                        <CardTitle className="text-2xl">MLA Citation</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="flex flex-col items-center justify-center space-y-2 bg-white rounded-xl">
+                            <Textarea id="mla" value={mla} readOnly disabled/>
+                            <Button disabled={mla === ""} onClick={() => {
+                                navigator.clipboard.writeText(mla);
+                                toast({
+                                    description: "Citation copied to clipboard!",
+                                })
+                            }}>Copy to Clipboard</Button>
                         </div>
-                        <div className="grid gap-2">
-                            <Label htmlFor="bibTex">BibTeX</Label>
-                            <Textarea id="bibTex" name="bibTex" onChange={handleTextChange} value={bibTex}/>
-                        </div>
-                        <Button type="submit" className="w-full" disabled={!isButtonEnabled || isLoading}>
-                            {isLoading && <LoaderCircle className="mr-2 h-4 w-4 animate-spin"/>}
-                            Convert
-                        </Button>
-                    </form>
-                </CardContent>
-            </Card>
-            <Card className="row-span-1">
-                <CardHeader className="text-center">
-                    <CardTitle className="text-2xl">MLA Citation</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <div className="flex flex-col items-center justify-center space-y-2 bg-white rounded-xl">
-                        <Textarea id="mla" value={mla} readOnly disabled/>
-                        <Button disabled={mla === ""} onClick={() => {
-                            navigator.clipboard.writeText(mla);
-                            toast({
-                                description: "Citation copied to clipboard!",
-                            })
-                        }}>Copy to Clipboard</Button>
-                    </div>
-                </CardContent>
-            </Card>
-            <Toaster/>
+                    </CardContent>
+                </Card>
+                <Toaster/>
+            </div>
         </div>
     )
 }

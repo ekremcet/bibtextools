@@ -1,4 +1,5 @@
 import {Inter} from "next/font/google";
+import {LogoHeader} from "@/components/LogoHeader";
 
 const inter = Inter({subsets: ["latin"]});
 
@@ -46,6 +47,7 @@ export default function Home() {
                 <div
                     className="hero__container px-7 lg:px-10 max-w-6xl mx-auto flex flex-col gap-y-10 lg:flex-row items-center gap-x-10 justify-center py-10 lg:py-24">
                     <div className="hero-content lg:w-[650px] lg:px-5 flex flex-col gap-y-5">
+                        <LogoHeader/>
                         <h1 className="text-4xl md:text-5xl xl:text-[50px] leading-[1.2] md:max-w-xl md:mx-auto text-center lg:text-left lg:mx-0 lg:max-w-full font-semibold text-black">
                             Tools that make working with BibTeX easy
                         </h1>
