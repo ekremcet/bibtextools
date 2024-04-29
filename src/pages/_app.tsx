@@ -8,7 +8,7 @@ export default function App({Component, pageProps}: AppProps) {
             <Head>
                 <script defer src="https://api.pirsch.io/pa.js"
                         id="pianjs"
-                        data-code="FnDxizwlunzCVNodkM83pW53biTjhObt"></script>
+                        data-code="hsKXS6s0dnl9ABqti34whB8AZH8yN1MS"></script>
             </Head>
             <Component {...pageProps} />
         </>
