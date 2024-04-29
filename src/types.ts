@@ -14,6 +14,7 @@ export interface BibJSON {
     doi?: string;
     abstract?: string;
     booktitle?: string;
+    journal?: string;
     pages?: string;
     numpages?: string;
     keywords?: string;

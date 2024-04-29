@@ -10,13 +10,18 @@ import {Input} from "@/components/ui/input"
 import {Label} from "@/components/ui/label"
 import {Textarea} from "@/components/ui/textarea";
 import React, {ChangeEvent, useState} from "react";
-import {LoaderCircle, ShieldAlert} from "lucide-react";
-import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
+import {LoaderCircle} from "lucide-react";
+import {extractAuthors, ParseBibtex} from "@/lib/parseUtils";
+import {bibToMLA} from "@/lib/utils";
+import {useToast} from "@/components/ui/use-toast";
+import {Toaster} from "@/components/ui/toaster";
 
-export default function BibFileForm() {
+export default function BibtexToMla() {
+    const { toast } = useToast()
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [bibFile, setBibFile] = useState<File | null>(null)
     const [bibTex, setBibTex] = useState<string>("")
+    const [mla, setMla] = useState<string>("")
     // to force re-render of input field
     const [inputKey, setInputKey] = useState<string>(Date.now().toString())
 
@@ -43,13 +48,20 @@ export default function BibFileForm() {
         let apiPath = ""
 
         if (isBibtexLengthValid) {
-            formData.append('bibTex', bibTex)
-            apiPath = '/api/bibtex-to-cff'
+            const bibJSON = ParseBibtex(bibTex)
+            // @ts-ignore
+            const authors = extractAuthors(bibJSON.author)
+            const mlaText = bibToMLA(bibJSON, authors)
+            setMla(mlaText)
+            setIsLoading(false)
+
+            return
+
         } else if (bibFile !== null) {
             formData.append('bibtexFile', bibFile as Blob)
-            apiPath = '/api/bibfile-to-cff'
+            apiPath = '/api/bibfile-to-mla'
         } else {
-            alert('Please provide a BibTex file or paste BibTex')
+            alert('Please provide a BibTeX file or paste BibTeX')
         }
 
         const response = await fetch(apiPath, {
@@ -58,14 +70,8 @@ export default function BibFileForm() {
         });
 
         if (response.ok) {
-            const blob = await response.blob();
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'CITATION.cff';
-            document.body.appendChild(a); // append the element to the DOM to make it work in Firefox
-            a.click();
-            a.remove();
+            const data = await response.json()
+            setMla(data.mlaText)
         } else {
             alert('Failed to convert BibTex to CFF');
         }
@@ -73,12 +79,12 @@ export default function BibFileForm() {
     };
 
     return (
-        <div className="main-content grid grid-rows-5 justify-center items-center min-h-screen">
-            <Card className="w-full row-span-4 ">
+        <div className="main-content grid grid-rows-3 justify-center items-center min-h-screen min-w-screen">
+            <Card className="w-[700px] row-span-2">
                 <CardHeader className="text-center">
-                    <CardTitle className="text-2xl">BibTeX to CFF Converter</CardTitle>
+                    <CardTitle className="text-2xl">BibTeX to MLA Converter</CardTitle>
                     <CardDescription>
-                        Convert BibTex format to CFF format for GitHub citations
+                        Convert BibTex format to MLA format for text-based citations
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -93,12 +99,12 @@ export default function BibFileForm() {
                             </div>
                             <div className="relative flex justify-center text-xs uppercase">
                                 <span className="bg-background px-2 text-muted-foreground">
-                                    Or paste BibTex below
+                                    Or paste BibTeX below
                                 </span>
                             </div>
                         </div>
                         <div className="grid gap-2">
-                            <Label htmlFor="bibTex">BibTex</Label>
+                            <Label htmlFor="bibTex">BibTeX</Label>
                             <Textarea id="bibTex" name="bibTex" onChange={handleTextChange} value={bibTex}/>
                         </div>
                         <Button type="submit" className="w-full" disabled={!isButtonEnabled || isLoading}>
@@ -109,25 +115,22 @@ export default function BibFileForm() {
                 </CardContent>
             </Card>
             <Card className="row-span-1">
-                <Alert>
-                    <ShieldAlert className="h-4 w-4"/>
-                    <AlertTitle>Heads up!</AlertTitle>
-                    <AlertDescription>
-                        <div className="text-left text-muted-foreground text-xs">
-                            <span className="font-bold">There are some parts missing in the conversion, so please fix them manually for now</span>
-                            <ol>
-                                <li>date-released: month and day values are taken randomly</li>
-                                <li>url: please replace with the your GitHub URL</li>
-                                <li>version: it's set to 1.0.0 automatically</li>
-                                <li>authors: might return weird combinations if the bibtex file is constructed with
-                                    quotes
-                                    instead of curly bracelets
-                                </li>
-                            </ol>
-                        </div>
-                    </AlertDescription>
-                </Alert>
+                <CardHeader className="text-center">
+                    <CardTitle className="text-2xl">MLA Citation</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <div className="flex flex-col items-center justify-center space-y-2 bg-white rounded-xl">
+                        <Textarea id="mla" value={mla} readOnly disabled/>
+                        <Button disabled={mla === ""} onClick={() => {
+                            navigator.clipboard.writeText(mla);
+                            toast({
+                                description: "Citation copied to clipboard!",
+                            })
+                        }}>Copy to Clipboard</Button>
+                    </div>
+                </CardContent>
             </Card>
+            <Toaster/>
         </div>
     )
 }

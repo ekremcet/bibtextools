@@ -7,7 +7,12 @@ const ToolData = [
     {
         title: "BibTeX to CFF",
         description: "Convert BibTeX format to CFF format for GitHub citations",
-        url: "/bibtextocff"
+        url: "/bibtex-to-cff"
+    },
+    {
+        title: "BibTeX to MLA",
+        description: "Convert BibTeX format to MLA format for text citations",
+        url: "/bibtex-to-mla"
     },
 ];
 
@@ -48,7 +53,7 @@ export default function Home() {
                             Trying to remove annoying BibTeX processing from your workflow
                         </p>
                         <div
-                            className="flex flex-col md:flex-row items-center md:items-start justify-center lg:justify-start gap-x-5 gap-y-3">
+                            className="flex flex-col items-center md:items-start justify-center lg:justify-start gap-x-5 gap-y-3">
                             {ToolData.map(({title, description, url}) => (
                                 <ToolCard title={title} description={description} url={url}/>
                             ))}
