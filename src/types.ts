@@ -7,6 +7,7 @@ export interface BibJSON {
     title?: string;
     author?: string;
     year?: string;
+    month? : string;
     isbn?: string;
     publisher?: string;
     address?: string;

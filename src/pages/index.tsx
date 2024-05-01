@@ -15,6 +15,11 @@ const ToolData = [
         description: "Convert BibTeX format to MLA format for text citations",
         url: "/bibtex-to-mla"
     },
+    {
+        title: "BibTeX to APA",
+        description: "Convert BibTeX format to APA format for text citations",
+        url: "/bibtex-to-apa"
+    },
 ];
 
 interface ToolCardProps {
