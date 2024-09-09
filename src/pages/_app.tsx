@@ -14,7 +14,7 @@ export default function App({ Component, pageProps }: AppProps) {
         ></script>
         <script
           src="https://app.suppa.ai/integration/script.js"
-          data-api-key="8dd81ab4-7ed9-4c67-86b3-7b11b174a467"
+          data-api-key="3a0335f3-c67e-474d-9edc-d2ca722add6e"
         ></script>
       </Head>
       <Component {...pageProps} />
